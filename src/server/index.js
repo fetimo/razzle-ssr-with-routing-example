@@ -5,9 +5,12 @@ import serialize from 'serialize-javascript';
 import ReactHelmet from 'react-helmet';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter, matchPath } from 'react-router-dom';
+import { Provider } from 'react-redux';
+
 import App from '../common/App';
 import ErrorComponent from '../common/_error';
 import routes from '../common/routes';
+import configureStore from '../common/store/configureStore';
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -22,7 +25,7 @@ server
     try {
       // We block rendering until all promises have resolved
       const data = await Promise.all(
-        routes.map((route, index) => {
+        routes.map((route) => {
           const match = matchPath(req.url, route);
           return match && route.component.getInitialProps
             ? route.component.getInitialProps({ match, req, res, axios })
@@ -30,11 +33,20 @@ server
         })
       );
 
+      // Compile an initial state
+      // I guess this could come from an API call
+      const preloadedState = {};
+
+      // Create a new Redux store instance
+      const store = configureStore(preloadedState);
+
       // Pass our routes and data array to our App component
       const markup = renderToString(
-        <StaticRouter context={context} location={req.url}>
-          <App routes={routes} initialData={data} />
-        </StaticRouter>
+        <Provider store={ store }>
+          <StaticRouter context={ context } location={ req.url }>
+            <App routes={ routes } initialData={ data } />
+          </StaticRouter>
+        </Provider>
       );
 
       // We rewind ReactHelmet for meta tags
@@ -50,15 +62,15 @@ server
         <head>
             <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
             <meta charSet='utf-8' />
-            ${head.title.toString()}
+            ${ head.title.toString() }
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <script src="${assets.client.js}" defer></script>
-            ${head.meta.toString()}
-            ${head.link.toString()}
+            <script src="${ assets.client.js }" defer></script>
+            ${ head.meta.toString() }
+            ${ head.link.toString() }
         </head>
         <body>
-            <div id="root">${markup}</div>
-            <script>window.DATA = ${serialize(data)};</script>
+            <div id="root">${ markup }</div>
+            <script>window.DATA = ${ serialize(data) };</script>
         </body>
     </html>`
         );
@@ -66,7 +78,7 @@ server
     } catch (e) {
       console.log('in server catch');
       console.log(e);
-      const markup = renderToString(<ErrorComponent error={e} />);
+      const markup = renderToString(<ErrorComponent error={ e } />);
       // We rewind ReactHelmet for meta tags
       const head = ReactHelmet.renderStatic();
       res.status(e.response ? e.response.status : 500).send(
@@ -75,13 +87,13 @@ server
           <head>
               <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
               <meta charSet='utf-8' />
-              ${head.title.toString()}
+              ${ head.title.toString() }
               <meta name="viewport" content="width=device-width, initial-scale=1">
-              ${head.meta.toString()}
-              ${head.link.toString()}
+              ${ head.meta.toString() }
+              ${ head.link.toString() }
           </head>
           <body>
-              <div id="root">${markup}</div>
+              <div id="root">${ markup }</div>
           </body>
       </html>`
       );

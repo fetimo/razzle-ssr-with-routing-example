@@ -6,18 +6,18 @@ const routes = [
   {
     path: '/',
     component: Home,
-    exact: true,
+    exact: true
   },
   {
-    path: '/(\d*)/(\d*)/:slug',
+    path: '/(d*)/(d*)/:slug',
     component: Single,
-    exact: true,
+    exact: true
   },
   {
     path: '/:slug',
     component: Page,
-    exact: true,
-  },
+    exact: true
+  }
 ];
 
 export default routes;
