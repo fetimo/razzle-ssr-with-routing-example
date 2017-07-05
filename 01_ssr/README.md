@@ -5,5 +5,3 @@ Install dependencies with `yarn`.
 Start compilation and serving app with `yarn start`.
 
 It features server-side routing and fetching data before render, as well as allowing the client to fetch data.
-
-Full credit to Jared Palmer, putting it together helped me wrap my head around it.
