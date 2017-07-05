@@ -32,7 +32,7 @@ export default function Page(WrappedComponent) {
       super(props);
       this.state = {
         data: props.initialData,
-        isLoading: !!props.initialData
+        isLoading: !!props.initialData,
       };
     }
 
@@ -58,7 +58,7 @@ export default function Page(WrappedComponent) {
             // We can gracefully expose errors on the client, by also keeping
             // them in state.
             data: { error },
-            isLoading: false
+            isLoading: false,
           })
       );
     };
@@ -73,10 +73,10 @@ export default function Page(WrappedComponent) {
       const { initialData, ...rest } = this.props;
       return (
         <WrappedComponent
-          { ...rest }
-          refetch={ this.fetchData }
-          isLoading={ this.state.isLoading }
-          { ...this.state.data }
+          {...rest}
+          refetch={this.fetchData}
+          isLoading={this.state.isLoading}
+          {...this.state.data}
         />
       );
     }
@@ -84,7 +84,7 @@ export default function Page(WrappedComponent) {
 
   // Set out component's displayName. This just makes debugging easier.
   // Components will show as Page(MyComponent) in react-dev-tools.
-  Page.displayName = `Page(${ getDisplayName(WrappedComponent) })`;
+  Page.displayName = `Page(${getDisplayName(WrappedComponent)})`;
   return Page;
 }
 
