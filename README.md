@@ -1,4 +1,4 @@
-Two examples of using Razzle which expand on [this gist](https://gist.github.com/jaredpalmer/a73bc00cac8926ff0ad5281879b1eb90). 
+Two examples of using Razzle which expand on [this gist](https://gist.github.com/jaredpalmer/a73bc00cac8926ff0ad5281879b1eb90). Both include routing with `react-router`.
 
 `01_ssr` contains an example app with server-side rendering.
 `02_ssr-with-redux` contains an example app with server-side rendering and Redux actions.
